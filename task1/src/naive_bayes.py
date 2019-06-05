@@ -1,5 +1,5 @@
 from collections import Counter
-import classifier.py
+import task1.src.classifier as classifier
 
 HANDLES_DICT = {0: "@realDonaldTrump",
                 1: "@joebiden",
@@ -14,7 +14,19 @@ HANDLES_DICT = {0: "@realDonaldTrump",
                 }
 
 
-class naive_bayes(classifier)
+class naive_bayes(classifier):
+    def __init__(self) -> None:
+        probs = None
+
+
+    def fit(self, X, y):
+        pass
+
+    def classify(self, X):
+        pass
+
+    def score(self, X, y):
+        pass
 
 
 def compute_probabilities(words, people, texts):
