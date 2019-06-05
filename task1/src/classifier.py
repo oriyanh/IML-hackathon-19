@@ -10,7 +10,7 @@ class classifier:
 	def fit(self, X, y):
 		pass
 
-	def predict(self, X):
+	def classify(self, X):
 		pass
 
 	def score(self, X, y):
