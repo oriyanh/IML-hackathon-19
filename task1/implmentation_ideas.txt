@@ -1,0 +1,7 @@
+Idea 1 - Using BoW with a threshold:
+
+    As part of fitting, each word introduced in training will be inserted into
+    BoW so long as its appearance count is below a certain threshold.
+
+    We can use BoW to turn each tweet into a feature vector, and boost the
+    result using Adaboost or bagging.
