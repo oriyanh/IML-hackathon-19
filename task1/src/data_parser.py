@@ -106,8 +106,9 @@ class Parser:
 				else:
 					yield [normalizer(token) for token in tokens]
 
-		token_generators = (token_gen(tokenizer, normalizer) for tokenizer in tokenizers
-															for normalizer in normalizers)
+		token_generators = [token_gen(tokenizer, normalizer) for tokenizer
+                            in tokenizers for normalizer
+                            in normalizers]
 		return token_generators
 
 if __name__ == "__main__":
