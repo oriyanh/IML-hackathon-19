@@ -51,6 +51,15 @@ class CNNClassifier(ClassifierBase):
         ret[np.arange(y.shape[0]), y.astype(int)] = 1
         return ret
 
+    @staticmethod
+    def uncanonize_y(y):
+        """
+        Canonizes y vec to proper form
+        :param y: Label vector
+        :return: Proper form of y for the CNN
+        """
+        return np.argwhere(y == 1)[:,1]
+
     def build_model(self):
         """
         Build the model
