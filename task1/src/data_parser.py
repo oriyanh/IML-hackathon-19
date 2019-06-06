@@ -5,12 +5,19 @@ import pandas as pd
 import numpy as np
 import os.path
 from task1.src.Commons import *
-
+import preprocessor as p
 
 class Parser:
 
 	def __init__(self) -> None:
 		super().__init__()
+
+	@staticmethod
+	def preprocess_data(X):
+        p.set_options(p.OPT.URL, p.OPT.RESERVED,)
+		X_new = np.array(X)
+		for i, x in enumerate(X_new):
+
 
 	@staticmethod
 	def get_vocabulary(tokenized_tweets):
