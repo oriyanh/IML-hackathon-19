@@ -39,4 +39,4 @@ def split_training_validation_sets(X, y, ratio):
 	validation_set = X[num_training_samples:], y[num_training_samples:]
 	return training_set, validation_set
 
-BEST_LEARNER_MAPPING = (10, os.path.join(WEIGHTS_DIR_PATH, MODEL_FILE_NAME))
+BEST_LEARNER_MAPPING = (5, os.path.join(WEIGHTS_DIR_PATH, "linear2_weights.joblist"))

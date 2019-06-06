@@ -1,4 +1,4 @@
-import json
+import os
 
 from sklearn.linear_model import RidgeClassifier, Perceptron, PassiveAggressiveClassifier, SGDClassifier
 from sklearn.naive_bayes import MultinomialNB, BernoulliNB, ComplementNB
@@ -6,9 +6,10 @@ from sklearn.svm import LinearSVC
 
 from task1.src.ClassifierBase import ClassifierBase
 from task1.src.CNNClassifier import CNNClassifier
-from task1.src.genericsklclassifier import GenericSKLClassifier
+from task1.src.genericsklclassifier import GenericSKLClassifier, BEST_LEARNER_MAPPING, OUT_DIR_PATH
 import numpy as np
 
+from task1.src.data_parser import Parser
 SKLEARNERS = (
     (RidgeClassifier(tol=1e-2, solver="sag"), "Ridge Classifier"),
     (Perceptron(max_iter=50, tol=1e-3), "Perceptron"),
@@ -21,9 +22,9 @@ SKLEARNERS = (
     (BernoulliNB(alpha=.01), "bernouliNB"),
     (ComplementNB(alpha=.1), "complementNB"))
 
-NN_LEARNERS = (CNNClassifier(),)
+NN_LEARNER = (CNNClassifier(), "CNN Learner")
 
-LEARNERS = (*SKLEARNERS, *NN_LEARNERS)
+LEARNERS = (*SKLEARNERS, NN_LEARNER)
 
 
 class MegaClassifier(ClassifierBase):
@@ -35,44 +36,34 @@ class MegaClassifier(ClassifierBase):
 
     def fit(self, X, y):
         for clf in SKLEARNERS:
-            classifier = GenericSKLClassifier(clf)
+            classifier = GenericSKLClassifier(*clf)
             classifier.fit(X, y)
             self.learners.append(classifier)
-        for clf in NN_LEARNERS:
-            # clf.fit(X, y)
-            self.learners.append(clf)
+        self.learners.append(NN_LEARNER[0])
 
     def classify(self, X):
-        self.best_learner = LEARNERS[BEST_LEARNER_MAPPING[0]]
+        best_learner_index = BEST_LEARNER_MAPPING[0]
+        if best_learner_index < 10:
+            self.best_learner = GenericSKLClassifier(LEARNERS[best_learner_index][0], LEARNERS[best_learner_index][1])
+        else:
+            self.best_learner = LEARNERS[best_learner_index][0]
         self.weights_path = BEST_LEARNER_MAPPING[1]
         return self.best_learner.classify(X)
 
     def score(self, X, y):
-        results = np.zeros(len(self.learners))
-        names =
+        scores = np.zeros(len(self.learners))
         for i, clf in enumerate(self.learners):
-            results[i] = clf.score(X, y)
-        best_learner_idx = np.argmin(results)[0]
+            scores[i] = clf.score(X, y.astype(np.int))
+        best_learner_idx = np.argmax(scores)
         self.best_learner = self.learners[best_learner_idx]
-        print("Best learner: %s, best score: %s" % (self.best_learner.__name__, results[best_learner_idx]))
+        print(f"Best learner: {LEARNERS[best_learner_idx][1]}, best score: {scores[best_learner_idx]}")
 
-        indices = np.arange(len(results))
 
-        # results = [[x[i] for x in results] for i in range(2)]
-        clf_names = [clf.__name__ for clf in self.learners]
-        # clf_names, score, training_time, test_time = results
-        # training_time = np.array(training_time) / np.max(training_time)
-        # test_time = np.array(test_time) / np.max(test_time)
-
-        plt.figure(figsize=(12, 8))
-        plt.title("Score")
-        plt.barh(indices, scores, .2, label="score", color='navy')
-        plt.yticks(())
-        plt.legend(loc='best')
-        plt.subplots_adjust(left=.25)
-        plt.subplots_adjust(top=.95)
-        plt.subplots_adjust(bottom=.05)
-        for i, c in zip(indices, clf_names):
-            plt.text(-.3, i, c)
-        plt.tight_layout()
-        plt.show()
+if __name__ == "__main__":
+    training_set_path = os.path.join(OUT_DIR_PATH, 'training_set.csv')
+    test_set_path = os.path.join(OUT_DIR_PATH, 'test_set.csv')
+    X_tr, y_tr = Parser.load_csv_to_array(training_set_path)
+    X_te, y_te = Parser.load_csv_to_array(test_set_path)
+    clf = MegaClassifier()
+    clf.fit(X_tr, y_tr)
+    clf.score(X_te, y_te)
