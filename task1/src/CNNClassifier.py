@@ -109,8 +109,6 @@ class CNNClassifier(ClassifierBase):
         self.model.fit(X_train_pad, CNNClassifier.canonize_y(y), epochs=8,
                        steps_per_epoch=15)
         self.model_trained = True
-        with open(TOKENIZER_FILE_NAME, 'wb') as handle:
-            pickle.dump(tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
     def classify(self, X):
         """
@@ -139,9 +137,13 @@ class CNNClassifier(ClassifierBase):
         return self.model.evaluate(X_train_pad, CNNClassifier.canonize_y(y))[1]
 
     def save_model(self):
-        with open(TOKENIZER_FILE_NAME, 'wb') as handle:
-            pickle.dump(self.tokenizer, handle,
-                        protocol=pickle.HIGHEST_PROTOCOL)
+        if self.model_built and self.model_trained:
+            with open(os.path.join(
+                    WEIGHTS_DIR_PATH, TOKENIZER_FILE_NAME), 'wb') as handle:
+                pickle.dump(self.tokenizer, handle,
+                            protocol=pickle.HIGHEST_PROTOCOL)
+            self.model.save(os.path.join(WEIGHTS_DIR_PATH, MODEL_FILE_NAME))
+
 
 
 if __name__ == "__main__":
