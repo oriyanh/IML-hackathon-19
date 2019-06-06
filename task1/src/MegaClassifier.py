@@ -1,15 +1,12 @@
-import os
-
 from sklearn.linear_model import RidgeClassifier, Perceptron, PassiveAggressiveClassifier, SGDClassifier
 from sklearn.naive_bayes import MultinomialNB, BernoulliNB, ComplementNB
 from sklearn.svm import LinearSVC
 
 from task1.src.ClassifierBase import ClassifierBase
 from task1.src.CNNClassifier import CNNClassifier
-from task1.src.genericsklclassifier import GenericSKLClassifier, BEST_LEARNER_MAPPING, OUT_DIR_PATH
+from task1.src.genericsklclassifier import GenericSKLClassifier, BEST_LEARNER_MAPPING
 import numpy as np
 
-from task1.src.data_parser import Parser
 SKLEARNERS = (
     (RidgeClassifier(tol=1e-2, solver="sag"), "Ridge Classifier"),
     (Perceptron(max_iter=50, tol=1e-3), "Perceptron"),
@@ -57,13 +54,3 @@ class MegaClassifier(ClassifierBase):
         best_learner_idx = np.argmax(scores)
         self.best_learner = self.learners[best_learner_idx]
         print(f"Best learner: {LEARNERS[best_learner_idx][1]}, best score: {scores[best_learner_idx]}")
-
-
-if __name__ == "__main__":
-    training_set_path = os.path.join(OUT_DIR_PATH, 'training_set.csv')
-    test_set_path = os.path.join(OUT_DIR_PATH, 'test_set.csv')
-    X_tr, y_tr = Parser.load_csv_to_array(training_set_path)
-    X_te, y_te = Parser.load_csv_to_array(test_set_path)
-    clf = MegaClassifier()
-    clf.fit(X_tr, y_tr)
-    clf.score(X_te, y_te)
