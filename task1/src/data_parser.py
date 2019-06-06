@@ -143,20 +143,19 @@ class Parser:
 
 		tokenizers = (treebank, tweet_no_case, tweet_with_case)
 		# _, __ = Parser.token_gen(tweets, tokenizers[0], normalizers[1])
-		token_lists = np.array([None] * (len(tokenizers) * len(normalizers)))
-		i = 0
-		for tok in tokenizers:
-			for norm in normalizers:
-					token_lists[i] = Parser.token_gen(tweets, tok, norm)
-					i += 1
-		token_lists = [Parser.token_gen(tweets, tok, norm) for tok in tokenizers for norm in normalizers]
+		# token_lists = np.array([None] * (len(tokenizers) * len(normalizers)))
+		# i = 0
+		# for tok in tokenizers:
+		# 	for norm in normalizers:
+		# 			token_lists[i] = Parser.token_gen(tweets, tok, norm)
+		# 			i += 1
+		# token_lists = [Parser.token_gen(tweets, tok, norm) for tok in tokenizers for norm in normalizers]
 
 		# token_generators = (token_gen(tokenizer, normalizer) for tokenizer in
 		#                     tokenizers
 		#                     for normalizer in normalizers)
 
-		return token_lists
-
+		return Parser.token_gen(tweets, tokenizers[2])
 
 if __name__ == "__main__":
 	names_full_path = os.path.join(TWEETS_DATA_PATH, NAMES_FILE)
