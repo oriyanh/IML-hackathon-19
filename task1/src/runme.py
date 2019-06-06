@@ -10,11 +10,12 @@ def main():
 	nltk.download("wordnet")
 	training_set_path = os.path.join(OUT_DIR_PATH, 'training_set.csv')
 	X, y = Parser.load_csv_to_array(training_set_path)
-	generators = Parser.tokenize_tweets(X)
-	for gen in generators:
-		values = list(gen)
-		pass
-	S, V = split_training_validation_sets(X, y, 0.8)
+	data = Parser.preprocess_data(X)
+	# generators = Parser.tokenize_tweets(X)
+	# for gen in generators:
+	# 	values = list(gen)
+	# 	pass
+	S, V = split_training_validation_sets(data, y, 0.8)
 	bayes_cls = naive_bayes()
 	bayes_cls.fit(*S)
 
