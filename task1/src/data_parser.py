@@ -9,7 +9,7 @@ class Parser:
 		super().__init__()
 
 	@staticmethod
-	def separate_training_and_validation_sets(tweet_csv_files, out_path=OUT_DIR_PATH):
+	def create_training_and_test_sets(tweet_csv_files, out_path=OUT_DIR_PATH):
 		"""
 		Creates a training set and a validation set from sequence of CSV files, with columns 'user','tweet' .
 		:param tweet_csv_files: Sequence of absolute paths to CSV files that contain tweet data.
@@ -76,14 +76,22 @@ class Parser:
 		for p in HANDLES_DICT.keys():
 			p_indices = np.argwhere(people == p)
 			p_tweets = tweets[p_indices]
+
+
 	@staticmethod
 	def load_csv_to_array(path):
 		vals = pd.read_csv(path, sep=",", encoding='utf-8').values
-		return vals[...,0], vals[...,1]
+		X = np.array([s.strip("\'\"[]") for s in vals[...,1]])
+		y = np.array(vals[...,0])
+		return X, y
 
+	@staticmethod
+	def split_tweets_to_particles(tweets):
+		pass
+	
 if __name__ == "__main__":
 	names_full_path = os.path.join(TWEETS_DATA_PATH, NAMES_FILE)
 	names = pd.read_csv(names_full_path, sep=",")
 
 
-	Parser.separate_training_and_validation_sets(TWEETS_DATA_PATH, OUT_DIR_PATH)
+	Parser.create_training_and_test_sets(TWEETS_DATA_PATH, OUT_DIR_PATH)

@@ -19,3 +19,11 @@ HANDLES_DICT = {0: "@realDonaldTrump",
 				8: "@jimmykimmel",
 				9: "@Schwartzenegger",
 				}
+
+
+def split_training_validation_sets(X, y, ratio):
+	num_samples = X.shape[0]
+	num_training_samples = int(num_samples * ratio)
+	training_set = X[:num_training_samples], y[:num_training_samples]
+	validation_set = X[num_training_samples:], y[num_training_samples:]
+	return training_set, validation_set

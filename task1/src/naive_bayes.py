@@ -16,9 +16,8 @@ HANDLES_DICT = {0: "@realDonaldTrump",
                 }
 
 
-class naive_bayes(classifier):
-    def __init__(self) -> None:
-        probs = None
+class naive_bayes(classifier.ClassifierBase):
+
 
 
     def fit(self, X, y):
