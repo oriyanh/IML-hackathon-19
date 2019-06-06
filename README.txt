@@ -1,6 +1,7 @@
 ﻿root
 │   USERS.txt - Our login data
 │   README.txt - This file :)
+│   project.pdf - the report
 │
 └───task1
     │   __init__.py - For imports
