@@ -1,7 +1,6 @@
-from task1.src.ClassifierBase import ClassifierBase
-
-
+from task1.src.MegaClassifier import *
 
 
 def classify(X):
-    pass
+    clf = MegaClassifier()
+    return clf.classify(X)

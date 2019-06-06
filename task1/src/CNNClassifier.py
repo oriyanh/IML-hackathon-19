@@ -14,8 +14,8 @@ from keras.utils import plot_model
 import pickle
 
 # Ah weel sho yoo de wegh
-MODEL_FILE_NAME = "weights.wegh"
-TOKENIZER_FILE_NAME = "tokenizer.pickle"
+MODEL_FILE_NAME = "cnn_weights.wegh"
+TOKENIZER_FILE_NAME = "cnn_tokenizer.pickle"
 
 
 class CNNClassifier(ClassifierBase):
@@ -33,10 +33,12 @@ class CNNClassifier(ClassifierBase):
         Inits the object, loads model if already exists
         """
         super().__init__()
-        if os.path.isfile(os.path.join(WEIGHTS_DIR_PATH, MODEL_FILE_NAME)) and \
-                os.path.isfile(os.path.join(TOKENIZER_FILE_NAME, MODEL_FILE_NAME)):
-            self.model = load_model(MODEL_FILE_NAME)
-            with open('tokenizer.pickle', 'rb') as handle:
+        self.weights_path = os.path.join(WEIGHTS_DIR_PATH, MODEL_FILE_NAME)
+        self.tokenizer_path = os.path.join(WEIGHTS_DIR_PATH, TOKENIZER_FILE_NAME)
+        if os.path.isfile(self.weights_path) and \
+                os.path.isfile(self.tokenizer_path):
+            self.model = load_model(self.weights_path)
+            with open(self.tokenizer_path, 'rb') as handle:
                 self.tokenizer = pickle.load(handle)
             self.model_trained = True
 
@@ -142,17 +144,4 @@ class CNNClassifier(ClassifierBase):
                     WEIGHTS_DIR_PATH, TOKENIZER_FILE_NAME), 'wb') as handle:
                 pickle.dump(self.tokenizer, handle,
                             protocol=pickle.HIGHEST_PROTOCOL)
-            self.model.save(os.path.join(WEIGHTS_DIR_PATH, MODEL_FILE_NAME))
-
-
-
-if __name__ == "__main__":
-    cnn = CNNClassifier()
-    training_set_path = os.path.join(OUT_DIR_PATH, 'training_set.csv')
-    X, y = Parser.load_csv_to_array(training_set_path)
-    S, V = split_training_validation_sets(X, y, 0.7)
-    cnn.fit(*S)
-    print("Evaluation on test")
-    print(cnn.score(*V))
-    print("Evaluation on train")
-    print(cnn.score(*S))
+            self.model.save(self.weights_path)

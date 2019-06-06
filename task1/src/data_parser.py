@@ -1,6 +1,5 @@
 from functools import reduce
 
-import nltk
 import pandas as pd
 import numpy as np
 import os.path

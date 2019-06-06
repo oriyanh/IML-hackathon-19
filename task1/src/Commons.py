@@ -39,18 +39,4 @@ def split_training_validation_sets(X, y, ratio):
 	validation_set = X[num_training_samples:], y[num_training_samples:]
 	return training_set, validation_set
 
-
-CLASSIFIERS = ((RidgeClassifier(tol=1e-2, solver="sag"), "Ridge Classifier"),
-               (Perceptron(max_iter=50, tol=1e-3), "Perceptron"),
-               (NearestCentroid(), "Nearest Centroid"),
-               (PassiveAggressiveClassifier(max_iter=50, tol=1e-3), "Passive-Aggressive"),
-               (LinearSVC(penalty='l1', dual=False, tol=1e-3), "linear1"),
-               [LinearSVC(penalty='l2', dual=False, tol=1e-3), "linear2"],
-               (SGDClassifier(alpha=.0001, max_iter=50, penalty='l1'), "sgd1"),
-               (SGDClassifier(alpha=.0001, max_iter=50, penalty='l2'), "sgd2"),
-               (SGDClassifier(alpha=.0001, max_iter=50,
-                              penalty='elasticnet'), "elasticnet"),
-               (MultinomialNB(alpha=.01), "multiNB"),
-               (BernoulliNB(alpha=.01), "bernouliNB"),
-               (ComplementNB(alpha=.1), "complementNB"),)
-               # (CNNClassifier(), "CNN "))
+BEST_LEARNER_MAPPING = (5, os.path.join(WEIGHTS_DIR_PATH, "linear2_weights.joblist"))
