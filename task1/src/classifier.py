@@ -1,17 +1,7 @@
-import pandas as pd
-import numpy as np
+from task1.src.ClassifierBase import ClassifierBase
 
 
-class classifier:
+class classifier(ClassifierBase):
 
-	def __init__(self) -> None:
-		super().__init__()
-
-	def fit(self, X, y):
-		label, handle = y
-
-	def classify(self, X):
-		pass
-
-	def score(self, X, y):
-		pass
+    def __init__(self) -> None:
+        super().__init__()
