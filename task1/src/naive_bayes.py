@@ -1,29 +1,18 @@
 from collections import Counter
 import task1.src.ClassifierBase as classifier
-from task1.src.data_parser import *
-
-HANDLES_DICT = {0: "@realDonaldTrump",
-                1: "@joebiden",
-                2: "@ConanOBrien",
-                3: "@TheEllenShow",
-                4: "@KimKardashian",
-                5: "@KingJames",
-                6: "@ladygaga",
-                7: "@Cristiano",
-                8: "@jimmykimmel",
-                9: "@Schwartzenegger",
-                }
+from task1.src.data_parser import Parser
 
 
 class naive_bayes(classifier):
     def __init__(self) -> None:
-        probs = None
+        self.probs = None
+        self.vocabulary = None
 
 
     def fit(self, X, y):
-        word_counts = get_word_counts(X, y)
-        words = get_unique_words()
-        self.probs = compute_probabilities(words, word_counts)
+        word_counts = Parser.get_word_counts(X, y)
+        self.vocabulary = Parser.get_unique_words()
+        self.probs = compute_probabilities(word_counts)
 
 
     def classify(self, X):
@@ -33,7 +22,8 @@ class naive_bayes(classifier):
             for person in range(10):
                 result = 1
                 for word in X:
-                    result *= self.probs[(word, person)]
+                    if word in self.vocabulary:
+                        result *= self.probs[(word, person)]
                 results[person] = result
             labels.append(np.argmax(results))
         return np.array(labels)
@@ -45,15 +35,15 @@ class naive_bayes(classifier):
         return diff
 
 
-def compute_probabilities(words, word_counts):
+    def compute_probabilities(self, word_counts):
 
-    probabilities = Counter()
+        probabilities = Counter()
 
-    for person in range(10):
-        num_words = word_counts[person].sum()
-        for word in words:
-            appearances = word_counts[person][word]
-            probabilities[(word, person)] = (appearances + 1) / (num_words + 1)  # add-1 smoothing
+        for person in range(10):
+            num_words = word_counts[person].sum()
+            for word in self.vocabulary:
+                appearances = word_counts[person][word]
+                probabilities[(word, person)] = (appearances + 1) / (num_words + 1)  # add-1 smoothing
 
-    return probabilities
+        return probabilities
 
