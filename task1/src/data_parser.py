@@ -77,7 +77,7 @@ class Parser:
 		for p in HANDLES_DICT.keys():
 			p_indices = np.argwhere(people == p)
 			p_tweets = tweets[p_indices]
-
+			# TODO currently this is a placeholder, for naive_bayse class
 
 	@staticmethod
 	def load_csv_to_array(path):
@@ -88,15 +88,28 @@ class Parser:
 
 	@staticmethod
 	def tokenize_tweets(tweets):
-		def token_gen(normalizer):
-			for tweet in tweets:
-				temp = normalizer(tweet)
-				yield temp
+		porter_normalizer = nltk.stem.PorterStemmer().stem
+		wordnet_normalizer = nltk.stem.WordNetLemmatizer().lemmatize
+		normalizers = (None, porter_normalizer, wordnet_normalizer)
+
 		treebank = nltk.tokenize.TreebankWordTokenizer().tokenize
 		whitespace = nltk.tokenize.WhitespaceTokenizer().tokenize
 		wordpunct = nltk.tokenize.WordPunctTokenizer().tokenize
-		return token_gen(treebank), token_gen(whitespace), token_gen(wordpunct)
-	
+
+		tokenizers = (whitespace, treebank, wordpunct)
+
+		def token_gen(tokenizer, normalizer=None):
+			for tweet in tweets:
+				tokens = tokenizer(tweet)
+				if normalizer is None:
+					yield tokens
+				else:
+					yield [normalizer(token) for token in tokens]
+
+		token_generators = (token_gen(tokenizer, normalizer) for tokenizer in tokenizers
+															for normalizer in normalizers)
+		return token_generators
+
 if __name__ == "__main__":
 	names_full_path = os.path.join(TWEETS_DATA_PATH, NAMES_FILE)
 	names = pd.read_csv(names_full_path, sep=",")
