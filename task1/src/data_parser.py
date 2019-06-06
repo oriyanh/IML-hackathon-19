@@ -90,7 +90,8 @@ class Parser:
 	def tokenize_tweets(tweets):
 		def token_gen(normalizer):
 			for tweet in tweets:
-				yield normalizer(tweet)
+				temp = normalizer(tweet)
+				yield temp
 		treebank = nltk.tokenize.TreebankWordTokenizer().tokenize
 		whitespace = nltk.tokenize.WhitespaceTokenizer().tokenize
 		wordpunct = nltk.tokenize.WordPunctTokenizer().tokenize
