@@ -47,7 +47,7 @@ class CNNClassifier(ClassifierBase):
             model = Model(inputs=a, outputs=out)
             model.summary()
             model.compile(optimizer='adam',
-                          loss='hinge',
+                          loss='binary_crossentropy',
                           metrics=['accuracy'])
             model.fit(np.array(list(stem)), y, epochs=10, steps_per_epoch=10)
             self.models.append(model)
