@@ -1,5 +1,6 @@
 from collections import Counter
-import task1.src.classifier as classifier
+import task1.src.ClassifierBase as classifier
+from task1.src.data_parser import *
 
 HANDLES_DICT = {0: "@realDonaldTrump",
                 1: "@joebiden",
@@ -20,40 +21,39 @@ class naive_bayes(classifier):
 
 
     def fit(self, X, y):
-        pass
+        word_counts = get_word_counts(X, y)
+        words = get_unique_words()
+        self.probs = compute_probabilities(words, word_counts)
+
 
     def classify(self, X):
-        pass
+        labels = []
+        for sent in X:
+            results = np.array([])
+            for person in range(10):
+                result = 1
+                for word in X:
+                    result *= self.probs[(word, person)]
+                results[person] = result
+            labels.append(np.argmax(results))
+        return np.array(labels)
+
 
     def score(self, X, y):
-        pass
+        labels = self.classify(X)
+        diff = np.sum(y == labels)
+        return diff
 
 
-def compute_probabilities(words, people, texts):
+def compute_probabilities(words, word_counts):
 
-    probabilitie = Counter()
+    probabilities = Counter()
 
-    for word in words:
-        for person in people:
-            num_words =
-            probabilitie[(word, person)] = 1
+    for person in range(10):
+        num_words = word_counts[person].sum()
+        for word in words:
+            appearances = word_counts[person][word]
+            probabilities[(word, person)] = (appearances + 1) / (num_words + 1)  # add-1 smoothing
 
-
-def add_one_smoothing(probs, words, people):
-    smoothed_probs = Counter()
-    for word in words:
-        for person in people:
-            smoothed_probs[(word, person)] = (probs[(word, person)] + 1) / (len(words) + 1)
-
-    return smoothed_probs
-
-
-def classify_tweet(probs, sentence, people):
-
-    results = []
-    for person in people:
-        result = 1
-        for word in sentence:
-            result *= probs[(word, person)]
-        results.append(result)
+    return probabilities
 
