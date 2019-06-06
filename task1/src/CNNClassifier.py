@@ -14,8 +14,8 @@ from keras.utils import plot_model
 import pickle
 
 # Ah weel sho yoo de wegh
-MODEL_FILE_NAME = "weights.wegh"
-TOKENIZER_FILE_NAME = "tokenizer.pickle"
+MODEL_FILE_NAME = "cnn_weights.wegh"
+TOKENIZER_FILE_NAME = "cnn_tokenizer.pickle"
 
 
 class CNNClassifier(ClassifierBase):
@@ -33,7 +33,8 @@ class CNNClassifier(ClassifierBase):
         Inits the object, loads model if already exists
         """
         super().__init__()
-        if os.path.isfile(os.path.join(WEIGHTS_DIR_PATH, MODEL_FILE_NAME)) and \
+        self.weights_path = os.path.join(WEIGHTS_DIR_PATH, "cnn_weights.wegh")
+        if os.path.isfile(self.weights_path) and \
                 os.path.isfile(os.path.join(TOKENIZER_FILE_NAME, MODEL_FILE_NAME)):
             self.model = load_model(MODEL_FILE_NAME)
             with open('tokenizer.pickle', 'rb') as handle:
@@ -142,7 +143,7 @@ class CNNClassifier(ClassifierBase):
                     WEIGHTS_DIR_PATH, TOKENIZER_FILE_NAME), 'wb') as handle:
                 pickle.dump(self.tokenizer, handle,
                             protocol=pickle.HIGHEST_PROTOCOL)
-            self.model.save(os.path.join(WEIGHTS_DIR_PATH, MODEL_FILE_NAME))
+            self.model.save(self.weights_path)
 
 
 

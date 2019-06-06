@@ -1,5 +1,4 @@
 import os
-import nltk
 from sklearn.linear_model import RidgeClassifier, Perceptron, PassiveAggressiveClassifier
 from sklearn.naive_bayes import BernoulliNB, MultinomialNB, ComplementNB
 import numpy as np
@@ -21,7 +20,7 @@ def main():
     # for gen in generators:
     # 	values = list(gen)
     # 	pass
-    S, V = split_training_validation_sets(X, y, 0.8)
+    S, V = split_training_validation_sets(X, y, 1)
     vocab = Parser.get_vocabulary(X)
     X_train, X_test = S[0], V[0]
     y_train, y_test = np.array(S[1], dtype="float"), np.array(V[1], dtype="float")
@@ -33,13 +32,11 @@ def main():
     for clf, name in (
             (RidgeClassifier(tol=1e-2, solver="sag"), "Ridge Classifier"),
             (Perceptron(max_iter=50, tol=1e-3), "Perceptron"),
-            (NearestCentroid(), "Nearest Centroid"),
             (PassiveAggressiveClassifier(max_iter=50, tol=1e-3), "Passive-Aggressive"),
             (LinearSVC(penalty='l1', dual=False, tol=1e-3), "linear1"),
             (LinearSVC(penalty='l2', dual=False, tol=1e-3), "linear2"),
-            (SGDClassifier(alpha=.0001, max_iter=50, penalty='l1'), "sgd1"),
-            (SGDClassifier(alpha=.0001, max_iter=50, penalty='l2'), "sgd2"),
-            (SGDClassifier(alpha=.0001, max_iter=50, penalty='l2'), "elasticnet"),
+            (SGDClassifier(alpha=.0001, max_iter=50, penalty='l2'), "sgd with l2 loss"),
+            (SGDClassifier(alpha=.0001, max_iter=50, penalty='elasticnet'), "elasticnet"),
             (MultinomialNB(alpha=.01), "multiNB"),
             (BernoulliNB(alpha=.01), "bernouliNB"),
             (ComplementNB(alpha=.1), "complementNB")):
@@ -48,7 +45,6 @@ def main():
         clf.fit(X_train, y_train)
         score = clf.score(X_test, y_test)
         print(score)
-        clf_descr = str(clf).split('(')[0]
         results.append((name, score))
 
 
