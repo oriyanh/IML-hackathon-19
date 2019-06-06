@@ -5,12 +5,16 @@ import pandas as pd
 import numpy as np
 import os.path
 from task1.src.Commons import *
-
+import preprocessing as p
 
 class Parser:
 
 	def __init__(self) -> None:
 		super().__init__()
+
+	@staticmethod
+	def preprocess_data(X):
+		pass
 
 	@staticmethod
 	def get_vocabulary(tokenized_tweets):
