@@ -1,3 +1,4 @@
+import nltk
 import pandas as pd
 import numpy as np
 import os.path
@@ -86,8 +87,9 @@ class Parser:
 		return X, y
 
 	@staticmethod
-	def split_tweets_to_particles(tweets):
-		pass
+	def tokenize_tweets(tweets):
+		for tweet in tweets:
+			yield nltk.TreebankWordTokenizer().tokenize(tweet)
 	
 if __name__ == "__main__":
 	names_full_path = os.path.join(TWEETS_DATA_PATH, NAMES_FILE)
