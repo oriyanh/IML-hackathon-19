@@ -6,16 +6,17 @@ from task1.src.data_parser import Parser
 import numpy as np
 import tensorflow as tf
 import os
-from task1.src.Commons import OUT_DIR_PATH, split_training_validation_sets
+from task1.src.Commons import OUT_DIR_PATH, WEIGHTS_DIR_PATH, \
+    split_training_validation_sets
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.utils import plot_model
 import pickle
 
-
-# I will show you da wegh
-MODEL_FILE_NAME = "model 0.75 acc"
+# Ah weel sho yoo de wegh
+MODEL_FILE_NAME = "weights.wegh"
 TOKENIZER_FILE_NAME = "tokenizer.pickle"
+
 
 class CNNClassifier(ClassifierBase):
     """
@@ -32,12 +33,12 @@ class CNNClassifier(ClassifierBase):
         Inits the object, loads model if already exists
         """
         super().__init__()
-        if os.path.isfile(MODEL_FILE_NAME) and os.path.isfile(TOKENIZER_FILE_NAME):
+        if os.path.isfile(os.path.join(WEIGHTS_DIR_PATH, MODEL_FILE_NAME)) and \
+                os.path.isfile(os.path.join(TOKENIZER_FILE_NAME, MODEL_FILE_NAME)):
             self.model = load_model(MODEL_FILE_NAME)
             with open('tokenizer.pickle', 'rb') as handle:
                 self.tokenizer = pickle.load(handle)
             self.model_trained = True
-
 
     @staticmethod
     def canonize_y(y):
@@ -88,12 +89,12 @@ class CNNClassifier(ClassifierBase):
         :param X: Data
         :param y: Labels
         """
-        self.corpus = Parser.tokenize_tweets(X)
+        X = Parser.preprocess_data(X)
         tokenizer = Tokenizer()
         self.tokenizer = tokenizer
         tokenizer.fit_on_texts(X)
         length = max([len(t.split()) for t in X])
-        X_tokens = tokenizer.texts_to_sequences(self.corpus[0])
+        X_tokens = tokenizer.texts_to_sequences(X)
         X_train_pad = pad_sequences(X_tokens, maxlen=length, padding='post')
         self.build_model()
         self.model.fit(X_train_pad, CNNClassifier.canonize_y(y), epochs=8,
@@ -102,29 +103,31 @@ class CNNClassifier(ClassifierBase):
         with open(TOKENIZER_FILE_NAME, 'wb') as handle:
             pickle.dump(tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-
     def classify(self, X):
         """
         Classifies the given data using the CNN that has already been fitted
         :param X: The data
         :return: The prediction
         """
-        Y = Parser.tokenize_tweets(X)
-        X = Y[0]
+        X = Parser.preprocess_data(X)
         X_tokens = self.tokenizer.texts_to_sequences(X)
         length = max([len(t.split()) for t in X])
         X_train_pad = pad_sequences(X_tokens, maxlen=length, padding='post')
-
-        return self.model.predict(X_train_pad)
+        y_hat = self.model.predict(X_train_pad)
+        return
 
     def score(self, X, y):
-        Y = Parser.tokenize_tweets(X)
-        X = Y[0]
+        """
+        Scores the output
+        :param X: Data
+        :param y: Correct labels
+        :return: Accuracy from 0 to 1
+        """
+        X = Parser.preprocess_data(X)
         X_tokens = self.tokenizer.texts_to_sequences(X)
         length = max([len(t.split()) for t in X])
         X_train_pad = pad_sequences(X_tokens, maxlen=length, padding='post')
         return self.model.evaluate(X_train_pad, CNNClassifier.canonize_y(y))[1]
-
 
 if __name__ == "__main__":
     cnn = CNNClassifier()
