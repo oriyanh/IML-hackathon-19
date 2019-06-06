@@ -4,7 +4,7 @@ from sklearn.svm import LinearSVC
 
 from task1.src.ClassifierBase import ClassifierBase
 from task1.src.CNNClassifier import CNNClassifier
-from task1.src.genericsklclassifier import GenericSKLClassifier, BEST_LEARNER_MAPPING
+from task1.src.GenericSKLClassifier import GenericSKLClassifier, BEST_LEARNER_MAPPING
 import numpy as np
 
 SKLEARNERS = (

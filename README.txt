@@ -12,7 +12,7 @@
     │       CNNClassifier.py - Convolutional neural network using keras, inherits from ClassifierBase
     │       Commons.py - Constants shared by all files
     │       data_parser.py - Used for pre-processing instances (tweets) before
-    │       genericsklclassifier.py - Batch for sklearn classifiers, inherits from ClassifierBase
+    │       GenericSKLClassifier.py - Batch for sklearn classifiers, inherits from ClassifierBase
     │       MegaClassifier.py - Container for classify method content
     │       __init__.py - For imports
     │
