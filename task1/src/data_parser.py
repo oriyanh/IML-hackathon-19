@@ -129,9 +129,9 @@ class Parser:
 
         
 
-        token_generators = (token_gen(tokenizer, normalizer) for tokenizer in
+        token_generators = [token_gen(tokenizer, normalizer) for tokenizer in
                             tokenizers
-                            for normalizer in normalizers)
+                            for normalizer in normalizers]
         return token_generators
 
 

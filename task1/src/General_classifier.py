@@ -9,7 +9,7 @@ import os
 from sklearn.datasets import fetch_20newsgroups
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import HashingVectorizer
-from sklearn.feature_selection import SelectFromModel, VarianceThreshold
+from sklearn.feature_selection import SelectFromModel, VarianceThreshold, SelectPercentile
 from sklearn.feature_selection import SelectKBest, chi2
 from sklearn.linear_model import RidgeClassifier
 from sklearn.pipeline import Pipeline
@@ -94,6 +94,7 @@ else:
 
 training_set_path = os.path.join(OUT_DIR_PATH, 'training_set.csv')
 X, y = Parser.load_csv_to_array(training_set_path)
+vocab = Parser.get_vocabulary(list(Parser.tokenize_tweets(X)[0]))
 S, V = split_training_validation_sets(X, y, 0.8)
 
 data_train, data_test = S[0], V[0]
@@ -103,8 +104,8 @@ vectorizer = TfidfVectorizer(sublinear_tf=True, stop_words='english')
 X_train = vectorizer.fit_transform(data_train)
 
 features = np.array(vectorizer.get_feature_names())
-vectorizer2 = TfidfVectorizer(sublinear_tf=True, max_df=0.5, stop_words='english', vocabulary=features)
-X_test = vectorizer2.fit_transform(data_test)
+# vectorizer2 = TfidfVectorizer(sublinear_tf=True, max_df=0.5, stop_words='english', vocabulary=features)
+X_test = vectorizer.transform(data_test)
 
 
 
@@ -130,8 +131,9 @@ else:
 
 
 
-ch2 = VarianceThreshold()
+ch2 = SelectPercentile(chi2, percentile=10)
 X_train = ch2.fit_transform(X_train, y_train)
+
 X_test = ch2.transform(X_test)
 
 if feature_names:
