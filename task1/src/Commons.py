@@ -3,6 +3,8 @@ import numpy as np
 
 TWEETS_DATA_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "tweets_data"))
 OUT_DIR_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "out"))
+WEIGHTS_DIR_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                                "..", "weights"))
 
 NAMES_FILE = r"names.txt"
 CSV_FILE_NAMES = list(filter(lambda f: f.endswith(".csv") and
