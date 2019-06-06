@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 import os.path
 from task1.src.Commons import *
-import preprocessing as p
+import preprocessor as p
 
 class Parser:
 
@@ -14,7 +14,10 @@ class Parser:
 
 	@staticmethod
 	def preprocess_data(X):
-		pass
+        p.set_options(p.OPT.URL, p.OPT.RESERVED,)
+		X_new = np.array(X)
+		for i, x in enumerate(X_new):
+
 
 	@staticmethod
 	def get_vocabulary(tokenized_tweets):
