@@ -98,13 +98,11 @@ class Parser:
         Parser.shuffle_csv(val_set_path, ['user', 'tweet'])
         Parser.shuffle_csv(train_set_path, ['user', 'tweet'])
 
-
     @staticmethod
     def shuffle_csv(path, columns=None):
         shuffled_df = pd.read_csv(path, sep=",", encoding='utf-8').sample(
             frac=1)
         Parser.csv_to_file(shuffled_df, path, "w", columns)
-
 
     @staticmethod
     def csv_to_file(df, path, mode="a", columns=None):
@@ -124,7 +122,6 @@ class Parser:
         df.to_csv(path, sep=",", mode=mode, header=header, index=False,
                   encoding='utf-8')
 
-
     @staticmethod
     def get_word_counts(tweets, people):
         """
@@ -139,16 +136,15 @@ class Parser:
             p_indices = np.argwhere(people == p)
             p_tweets = tweets[p_indices]
 
-
     # TODO currently this is a placeholder, for naive_bayse class
 
     @staticmethod
     def load_csv_to_array(path):
+        Parser.shuffle_csv(path, ['user', 'tweet'])
         vals = pd.read_csv(path, sep=",", encoding='utf-8').values
         X = np.array([s.strip("\'\"[]") for s in vals[..., 1]])
         y = np.array(vals[..., 0])
         return X, y
-
 
     @staticmethod
     def token_gen(tweets, tokenizer, normalizer=None):
@@ -177,7 +173,6 @@ class Parser:
         #         tokenized_tweets.append(normalized_tokens)
         #         modified_tweets.append(new_tweet)
         return modified_tweets, normalized_tokens
-
 
     @staticmethod
     def tokenize_tweets(tweets):

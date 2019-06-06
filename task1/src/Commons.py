@@ -1,4 +1,5 @@
 import os
+import numpy as np
 
 TWEETS_DATA_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "tweets_data"))
 OUT_DIR_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "out"))
