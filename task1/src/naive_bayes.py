@@ -1,6 +1,7 @@
 from collections import Counter
 import task1.src.ClassifierBase as classifier
-from task1.src.data_parser import *
+from task1.src.data_parser import Parser
+import numpy as np
 
 HANDLES_DICT = {0: "@realDonaldTrump",
                 1: "@joebiden",
@@ -21,8 +22,8 @@ class naive_bayes(classifier):
 
 
     def fit(self, X, y):
-        word_counts = get_word_counts(X, y)
-        words = get_unique_words()
+        word_counts = Parser.get_word_counts(X, y)
+        words = Parser.get_unique_words()
         self.probs = compute_probabilities(words, word_counts)
 
 

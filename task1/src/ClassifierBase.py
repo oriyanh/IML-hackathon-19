@@ -8,7 +8,7 @@ class ClassifierBase:
 		super().__init__()
 
 	def fit(self, X, y):
-		label, handle = y
+		pass
 
 	def classify(self, X):
 		pass
