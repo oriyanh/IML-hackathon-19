@@ -1,6 +1,7 @@
 from collections import Counter
 import task1.src.ClassifierBase as ClassifierBase
 from task1.src.data_parser import Parser
+import numpy as np
 
 
 class naive_bayes(ClassifierBase.ClassifierBase):
@@ -47,3 +48,4 @@ def compute_probabilities(self, word_counts):
             probabilities[(word, person)] = (appearances + 1) / (num_words + 1)  # add-1 smoothing
 
     return probabilities
+
