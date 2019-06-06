@@ -138,6 +138,12 @@ class CNNClassifier(ClassifierBase):
         X_train_pad = pad_sequences(X_tokens, maxlen=length, padding='post')
         return self.model.evaluate(X_train_pad, CNNClassifier.canonize_y(y))[1]
 
+    def save_model(self):
+        with open(TOKENIZER_FILE_NAME, 'wb') as handle:
+            pickle.dump(self.tokenizer, handle,
+                        protocol=pickle.HIGHEST_PROTOCOL)
+
+
 if __name__ == "__main__":
     cnn = CNNClassifier()
     training_set_path = os.path.join(OUT_DIR_PATH, 'training_set.csv')

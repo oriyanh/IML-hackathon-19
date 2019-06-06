@@ -2,17 +2,22 @@ import os
 
 from sklearn import metrics
 from joblib import dump, load
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 
-from task1.src.Commons import OUT_DIR_PATH
+from task1.src.ClassifierBase import ClassifierBase
+from task1.src.Commons import *
 
 WEIGHTS_PATH = os.path.join(OUT_DIR_PATH, "final_classifier_weights.joblib")
 
-class final_classifier:
+
+
+class GenericSKLClassifier(ClassifierBase):
 
     def __init__(self, clf, vocab=None):
+        super(ClassifierBase).__init__()
         self.clf = clf
-        self.vectorizer = CountVectorizer(vocabulary=vocab)
+        self.vectorizer = TfidfVectorizer(stop_words='english',
+                                          vocabulary=vocab)
 
 
 

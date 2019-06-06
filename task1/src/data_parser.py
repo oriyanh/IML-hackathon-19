@@ -53,8 +53,6 @@ class Parser:
 
     @staticmethod
     def get_vocabulary(tweets):
-    # def get_vocabulary(tokenized_tweets):
-        # return np.unique(np.concatenate(tokenized_tweets))
         return np.unique(np.concatenate(np.char.split(tweets)))
 
     @staticmethod
@@ -123,82 +121,12 @@ class Parser:
                   encoding='utf-8')
 
     @staticmethod
-    def get_word_counts(tweets, people):
-        """
-
-        :param tweets:
-        :type people: np.ndarray
-        :param people:
-        :type people: np.ndarray
-        :return:
-        """
-        for p in HANDLES_DICT.keys():
-            p_indices = np.argwhere(people == p)
-            p_tweets = tweets[p_indices]
-
-    # TODO currently this is a placeholder, for naive_bayse class
-
-    @staticmethod
     def load_csv_to_array(path):
         Parser.shuffle_csv(path, ['user', 'tweet'])
         vals = pd.read_csv(path, sep=",", encoding='utf-8').values
         X = np.array([s.strip("\'\"[]") for s in vals[..., 1]])
         y = np.array(vals[..., 0])
         return X, y
-
-    @staticmethod
-    def token_gen(tweets, tokenizer, normalizer=None):
-        tokenized_tweets = np.array([tokenizer(tweet) for tweet in tweets])
-        modified_tweets = np.array([None] * tokenized_tweets.shape[0])
-        normalized_tokens = np.array([None] * tokenized_tweets.shape[0])
-        if normalizer is not None:
-            for i, tokens in enumerate(tokenized_tweets):
-                normalized_tokens[i] = [normalizer(tok) for tok in tokens]
-                modified_tweets[i] = " ".join(word for word in normalized_tokens[i])
-        else:
-            modified_tweets = tweets
-            normalized_tokens = tokenized_tweets
-        # for tweet in tweets:
-        #     tokens = tokenizer(tweet)
-        #     if normalizer is None:
-        #         tokenized_tweets.append(tokens)
-        #         modified_tweets.append(tweet)
-        #     else:
-        #         normalized_tokens = [normalizer(token) for token in tokens]
-        #         # for token in tokens:
-        #         #     token_normalized = normalizer(token)
-        #         #     normalized_tokens.append(token_normalized)
-        #         new_tweet = ""
-        #         new_tweet = " ".join(normalizer(token) for token in tokens)
-        #         tokenized_tweets.append(normalized_tokens)
-        #         modified_tweets.append(new_tweet)
-        return modified_tweets, normalized_tokens
-
-    @staticmethod
-    def tokenize_tweets(tweets):
-        porter_normalizer = nltk.stem.PorterStemmer().stem
-        wordnet_normalizer = nltk.stem.WordNetLemmatizer().lemmatize
-        normalizers = (None, porter_normalizer, wordnet_normalizer)
-
-        treebank = nltk.tokenize.TreebankWordTokenizer().tokenize
-        tweet_no_case = nltk.tokenize.TweetTokenizer(preserve_case=False).tokenize
-        tweet_with_case = nltk.tokenize.TweetTokenizer().tokenize
-
-        tokenizers = (treebank, tweet_no_case, tweet_with_case)
-        # _, __ = Parser.token_gen(tweets, tokenizers[0], normalizers[1])
-        # token_lists = np.array([None] * (len(tokenizers) * len(normalizers)))
-        # i = 0
-        # for tok in tokenizers:
-        # 	for norm in normalizers:
-        # 			token_lists[i] = Parser.token_gen(tweets, tok, norm)
-        # 			i += 1
-        # token_lists = [Parser.token_gen(tweets, tok, norm) for tok in tokenizers for norm in normalizers]
-
-        # token_generators = (token_gen(tokenizer, normalizer) for tokenizer in
-        #                     tokenizers
-        #                     for normalizer in normalizers)
-
-        return Parser.token_gen(tweets, tokenizers[2])
 
 
 if __name__ == "__main__":
