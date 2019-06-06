@@ -1,6 +1,6 @@
 from collections import Counter
 import task1.src.ClassifierBase as classifier
-from task1.src.data_parser import *
+from task1.src.data_parser import Parser
 
 
 class naive_bayes(classifier):
@@ -10,8 +10,8 @@ class naive_bayes(classifier):
 
 
     def fit(self, X, y):
-        word_counts = get_word_counts(X, y)
-        self.vocabulary = get_unique_words()
+        word_counts = Parser.get_word_counts(X, y)
+        self.vocabulary = Parser.get_unique_words()
         self.probs = compute_probabilities(word_counts)
 
 
@@ -35,7 +35,7 @@ class naive_bayes(classifier):
         return diff
 
 
-    def compute_probabilities(word_counts):
+    def compute_probabilities(self, word_counts):
 
         probabilities = Counter()
 
