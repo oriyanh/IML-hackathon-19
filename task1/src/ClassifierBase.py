@@ -5,7 +5,7 @@ import numpy as np
 class ClassifierBase:
 
 	def __init__(self) -> None:
-		super().__init__()
+		pass
 
 	def fit(self, X, y):
 		pass
