@@ -5,9 +5,10 @@ import sys
 from time import time
 import matplotlib.pyplot as plt
 import os
+from task1.src.Commons import HANDLES_DICT
 
 from sklearn.datasets import fetch_20newsgroups
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.feature_extraction.text import HashingVectorizer
 from sklearn.feature_selection import SelectFromModel, VarianceThreshold, SelectPercentile
 from sklearn.feature_selection import SelectKBest, chi2
@@ -94,13 +95,14 @@ else:
 
 training_set_path = os.path.join(OUT_DIR_PATH, 'training_set.csv')
 X, y = Parser.load_csv_to_array(training_set_path)
-vocab = Parser.get_vocabulary(list(Parser.tokenize_tweets(X)[0]))
+X, tokens = Parser.tokenize_tweets(X)
+vocab = Parser.get_vocabulary(tokens)
 S, V = split_training_validation_sets(X, y, 0.8)
 
 data_train, data_test = S[0], V[0]
 y_train, y_test = np.array(S[1], dtype="float"), np.array(V[1], dtype="float")
 
-vectorizer = TfidfVectorizer(sublinear_tf=True, stop_words='english')
+vectorizer = CountVectorizer( stop_words='english', vocabulary=vocab)
 X_train = vectorizer.fit_transform(data_train)
 
 features = np.array(vectorizer.get_feature_names())
@@ -115,23 +117,22 @@ if opts.use_hashing:
 else:
     feature_names = vectorizer.get_feature_names()
 
-# if opts.select_chi2:
-#     print("Extracting %d best features by a chi-squared test" %
-#           opts.select_chi2)
-#     t0 = time()
-#     ch2 = SelectKBest(chi2, k=opts.select_chi2)
-#     X_train = ch2.fit_transform(X_train, y_train)
-#     X_test = ch2.transform(X_test)
-#     if feature_names:
-#         # keep selected feature names
-#         feature_names = [feature_names[i] for i
-#                          in ch2.get_support(indices=True)]
-#     print("done in %fs" % (time() - t0))
-#     print()
+if opts.select_chi2:
+    print("Extracting %d best features by a chi-squared test" %
+          opts.select_chi2)
+    t0 = time()
+    ch2 = SelectKBest(chi2, k=opts.select_chi2)
+    X_train = ch2.fit_transform(X_train, y_train)
+    X_test = ch2.transform(X_test)
+    if feature_names:
+        # keep selected feature names
+        feature_names = [feature_names[i] for i in ch2.get_support(indices=True)]
+    print("done in %fs" % (time() - t0))
+    print()
 
 
 
-ch2 = SelectPercentile(chi2, percentile=10)
+ch2 = SelectKBest(chi2, k=10000)
 X_train = ch2.fit_transform(X_train, y_train)
 
 X_test = ch2.transform(X_test)
@@ -174,10 +175,10 @@ def benchmark(clf):
         #         print(trim("%s: %s" % (label, " ".join(feature_names[top10]))))
         # print()
 
-    # if opts.print_report:
-    #     print("classification report:")
-    #     print(metrics.classification_report(y_test, pred,
-    #                                         target_names=target_names))
+    if opts.print_report:
+        print("classification report:")
+        print(metrics.classification_report(y_test, pred,
+                                            target_names=HANDLES_DICT.keys()))
 
     if opts.print_cm:
         print("confusion matrix:")
