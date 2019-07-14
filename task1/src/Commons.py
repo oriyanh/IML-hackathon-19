@@ -14,10 +14,13 @@ WEIGHTS_DIR_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                                 "..", "weights"))
 
 NAMES_FILE = r"names.txt"
-CSV_FILE_NAMES = list(filter(lambda f: f.endswith(".csv") and
-									   not f.endswith("tweets_test_demo.csv"), os.listdir(TWEETS_DATA_PATH)))
-CSV_FILE_PATHS = [os.path.join(TWEETS_DATA_PATH, f) for f in CSV_FILE_NAMES]
+if os.path.exists(TWEETS_DATA_PATH):
 
+	CSV_FILE_NAMES = list(filter(lambda f: f.endswith(".csv") and
+										   not f.endswith("tweets_test_demo.csv"), os.listdir(TWEETS_DATA_PATH)))
+	CSV_FILE_PATHS = [os.path.join(TWEETS_DATA_PATH, f) for f in CSV_FILE_NAMES]
+else:
+	CSV_FILE_PATHS = []
 
 HANDLES_DICT = {0: "@realDonaldTrump",
 				1: "@joebiden",
@@ -39,4 +42,4 @@ def split_training_validation_sets(X, y, ratio):
 	validation_set = X[num_training_samples:], y[num_training_samples:]
 	return training_set, validation_set
 
-BEST_LEARNER_MAPPING = (5, os.path.join(WEIGHTS_DIR_PATH, "linear2_weights.joblist"))
+BEST_LEARNER_MAPPING = (4, os.path.join(WEIGHTS_DIR_PATH, "linear2_weights.joblist"))
