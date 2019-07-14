@@ -19,8 +19,6 @@ if os.path.exists(TWEETS_DATA_PATH):
 	CSV_FILE_NAMES = list(filter(lambda f: f.endswith(".csv") and
 										   not f.endswith("tweets_test_demo.csv"), os.listdir(TWEETS_DATA_PATH)))
 	CSV_FILE_PATHS = [os.path.join(TWEETS_DATA_PATH, f) for f in CSV_FILE_NAMES]
-else:
-	CSV_FILE_PATHS = []
 
 HANDLES_DICT = {0: "@realDonaldTrump",
 				1: "@joebiden",
